@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Grades - Student Management System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: #f5f7fb;
+      color: #333;
+    }
+
+    header {
+      background-color: #2d3e50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #1c2733;
+      padding: 0 20px;
+    }
+
+    .nav-links {
+      display: flex;
+    }
+
+    nav a {
+      color: white;
+      padding: 15px 25px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    nav a:hover {
+      background-color: #34495e;
+    }
+
+    .right-nav {
+      margin-left: auto;
+      background-color: #34495e;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+
+    .right-nav:hover {
+      background-color: #3e5a76;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #2d3e50;
+      text-align: center;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .card img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    .details {
+      margin-bottom: 10px;
+    }
+
+    canvas {
+      max-width: 200px;
+      margin: auto;
+    }
+
+    .marks {
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-top: 10px;
+      color: #2d3e50;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Student Management System</h1>
+  </header>
+
+  <nav>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="enroll.html">Enroll</a>
+      <a href="students.html">Students</a>
+      <a href="attendance.html">Attendance</a>
+      <a href="grade.html">Grade</a>
+    </div>
+    <a href="#" class="right-nav"><i class="fas fa-arrow-right"></i></a>
+  </nav>
+
+  <div class="container">
+    <h2>Student Grades & Attendance</h2>
+    <div class="cards" id="studentCards">
+      <!-- Cards will be inserted here -->
+    </div>
+  </div>
+
+  <script>
+    const students = JSON.parse(localStorage.getItem("students")) || [];
+
+    // Example: Mock attendance and marks if not stored yet
+    const attendanceData = JSON.parse(localStorage.getItem("attendance")) || [];
+
+    const cardsContainer = document.getElementById("studentCards");
+
+    if (students.length === 0) {
+      cardsContainer.innerHTML = "<p>No students available. Please enroll students first.</p>";
+    } else {
+      students.forEach((student, index) => {
+        // Get attendance status for this student
+        let totalDays = 30;
+        let presentDays = Math.floor(Math.random() * 30); // Random for demo
+        let absentDays = totalDays - presentDays;
+
+        // Random mock marks out of 100
+        let marks = Math.floor(Math.random() * 41) + 60; // 60 to 100
+
+        const card = document.createElement("div");
+        card.classList.add("card");
+
+        card.innerHTML = `
+          <img src="C:\Users\Abhiram\OneDrive\Pictures\IMG_20231205_102436.jpg" alt="Student Photo">
+          <div class="details">
+            <h3>${student.name}</h3>
+            <p><strong>ID:</strong> ${student.id || "N/A"}</p>
+            <p><strong>Class:</strong> ${student.studentClass}</p>
+            <p><strong>Grade:</strong> ${student.grade}</p>
+          </div>
+          <canvas id="chart-${index}"></canvas>
+          <div class="marks">Overall Marks: ${marks}/100</div>
+        `;
+
+        cardsContainer.appendChild(card);
+
+        // Create Pie Chart
+        const ctx = document.getElementById(`chart-${index}`).getContext("2d");
+        new Chart(ctx, {
+          type: "pie",
+          data: {
+            labels: ["Present", "Absent"],
+            datasets: [{
+              label: "Attendance",
+              data: [presentDays, absentDays],
+              backgroundColor: ["#27ae60", "#e74c3c"]
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "bottom"
+              }
+            }
+          }
+        });
+      });
+    }
+  </script>
+
+</body>
+</html>

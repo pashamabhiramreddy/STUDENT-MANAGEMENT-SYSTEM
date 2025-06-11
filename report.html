@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reports (Teacher Chat)</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: #f5f7fb;
+      color: #333;
+    }
+
+    header {
+      background-color: #2d3e50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      background-color: #1c2733;
+    }
+
+    nav a {
+      color: white;
+      padding: 15px 25px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    nav a:hover {
+      background-color: #34495e;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #2d3e50;
+    }
+
+    .chat-box {
+      border: 1px solid #ccc;
+      height: 400px;
+      overflow-y: auto;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 15px;
+      background-color: #f9f9f9;
+    }
+
+    .message {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 10px;
+      max-width: 75%;
+      background-color: #d1ecf1;
+      word-wrap: break-word;
+      align-self: flex-start;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      padding: 10px;
+      flex: 1;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #2d3e50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #34495e;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Student Management System</h1>
+  </header>
+
+  <nav>
+    <a href="index.html">Dashboard</a>
+    <a href="enroll.html">Enroll</a>
+    <a href="students.html">Students</a>
+    <a href="attendance.html">Attendance</a>
+    <a href="grade.html">Grade</a>
+    <a href="report.html">Reports</a>
+  </nav>
+
+  <div class="container">
+    <h2>Teacher Messaging</h2>
+    <div class="chat-box" id="chatBox"></div>
+    <div class="input-area">
+      <input type="text" id="messageInput" placeholder="Type your message..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chatBox");
+    const messageInput = document.getElementById("messageInput");
+
+    function loadMessages() {
+      const messages = JSON.parse(localStorage.getItem("teacherMessages")) || [];
+      chatBox.innerHTML = "";
+      messages.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = "message";
+        div.textContent = msg;
+        chatBox.appendChild(div);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function sendMessage() {
+      const text = messageInput.value.trim();
+      if (text === "") return;
+
+      const messages = JSON.parse(localStorage.getItem("teacherMessages")) || [];
+      messages.push(text);
+      localStorage.setItem("teacherMessages", JSON.stringify(messages));
+
+      messageInput.value = "";
+      loadMessages();
+    }
+
+    loadMessages();
+  </script>
+
+</body>
+</html>
